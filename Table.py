@@ -23,6 +23,9 @@ Player {0} won! He earned {1}$ from the stack!
 class Table:
     """A table class"""
 
+    CARDS_PER_ROUND = [0, 3, 1, 1]
+    DICT_OF_TYPE = {0: "Heart", 1: "Diamond", 2: "Clover", 3: "Spade"}
+
     def __init__(self, num_of_players) -> None:
         """
         Initialize, all fields are self-explanatory.
@@ -35,10 +38,8 @@ class Table:
         self.stack_money = 0
         self.money_each_player_round = 0
         self.keep_play = True
-        self.cards_per_round = [0,3,1,1]
         self.round_num = 0
         self.open_cards = []
-        self.dict_of_types = {0: "Heart", 1: "Diamond", 2: "Clover", 3: "Spade"}
 
     def play_game(self) -> None:
         """
@@ -47,7 +48,7 @@ class Table:
         """
         self.deal_cards()
         while self.active_players > 1 and self.round_num < NUM_OF_ROUNDS:
-            self.open_cards_to_deck(self.cards_per_round[self.round_num])
+            self.open_cards_to_deck(Table.CARDS_PER_ROUND[self.round_num])
             self.show_open_cards()
             self.play_round()
             self.round_num += 1
@@ -88,7 +89,7 @@ class Table:
                         break
                     self.players[i].turn_off_active()
 
-            i = (i+1) % self.num_of_player  # go to next player.
+            i = (i + 1) % self.num_of_player  # go to next player.
         self.money_each_player_round = 0
 
     def open_cards_to_deck(self, num_of_cards) -> None:
@@ -117,7 +118,7 @@ class Table:
         open_cards = ''
         if len(self.open_cards) > 0:
             for i in range(len(self.open_cards)):
-                open_cards += str(self.open_cards[i][0]) + " of " + self.dict_of_types[self.open_cards[i][1]]
+                open_cards += str(self.open_cards[i][0]) + " of " + Table.DICT_OF_TYPE[self.open_cards[i][1]]
                 if i != len(self.open_cards):
                     open_cards += " | "
         else:
@@ -131,7 +132,7 @@ class Table:
         :return: string.
         """
         card_num = str(card[0])
-        card_type = self.dict_of_types[card[1]]
+        card_type = Table.DICT_OF_TYPE[card[1]]
         return card_num + " of " + card_type
 
     def prize_winner(self) -> None:
@@ -153,5 +154,3 @@ class Table:
             winner = rules.find_winner()
             print(WINNER.format(str(winner), str(self.stack_money)))
             # self.players[winner].add_money(self.stack_money)
-
-
