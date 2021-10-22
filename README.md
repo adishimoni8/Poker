@@ -1,2 +1,2 @@
 # Poker
-A poker game in python
+A poker game made in python
