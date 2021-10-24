@@ -27,7 +27,7 @@ class HandsChecker(object):
     def check_four_of_a_kind(player):
         lst = HandsChecker.get_numbers(player)
         for i in range(len(lst)):
-            if lst[i] == 4:
+            if lst[i] >= 4:
                 return True
         return False
 
@@ -68,7 +68,7 @@ class HandsChecker(object):
     def check_three_of_a_kind(player):
         lst = HandsChecker.get_numbers(player)
         for i in range(len(lst)):
-            if lst[i] == 3:
+            if lst[i] >= 3:
                 return True
         return False
 
@@ -77,7 +77,7 @@ class HandsChecker(object):
         lst = HandsChecker.get_numbers(player)
         val = 0
         for i in range(len(lst)):
-            if lst[i] == 2:
+            if lst[i] >= 2:
                 val += 1
         return val >= 2
 
@@ -85,7 +85,7 @@ class HandsChecker(object):
     def check_pair(player):
         lst = HandsChecker.get_numbers(player)
         for i in range(len(lst)):
-            if lst[i] == 2:
+            if lst[i] >= 2:
                 return True
         return False
 
