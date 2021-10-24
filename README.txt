@@ -1,32 +1,29 @@
-POKER
-=====
+POKER TEXAS HOLDEM
+==================
 made by: Adi Shimoni
 
-FILES
-=====
+FILES CONTAINED
+==================
 Game.py - The file that runs the game.
 Table.py - A class of a table of which the game runs on.
 Player.py - A class of a player.
-Deck.py - A class of deck of cards with basic methods upon it
-Rules.py - The rules of Poker to decide the winner
+Card.py - A class of a single card.
+CardStack.py - A stack of cards.
+Deck.py - A class of deck of cards with basic methods upon it.
+Dealer - A class of a dealer of cards.
+MoneyStack.py - A stack of money sits on the table.
+Rules.py - A static class contains the set of rules of poker (how many rounds, and decides the winner).
+HandChecker - A helper static class for the Rules.py, takes a single player and the open cards, and check if the player has a given hand by poker rules.
+README - this file.
 
-NOTES
-=====
-- This is an overall skeleton of a poker "texas holdem" style game, built in an OOP style with classes contacting
-  with each other.
-- Rules class is not entirely complete - the idea was to take the cards of all of the active player with the
-  open cards in the deck and to grade the highest hand using the rules of poker. The class is skeletoned in
-  a way that each possible hand has a matching indicating method (to decide whether a given player has this hand)
-  the method find winner supposed to iterate over all of the active player and map each with the given function in
-  a descending order (by the hand grade).
-- The game still contains bugs and not fully tested, among them:
-     - checking for huge number of players.
-     - deciding who the winner is.
-     - saving the information from the last game to continue playing with the last game's balances.
-     - sometimes need to check for correctnesses of values given by the user in the CLI - it can sometimes crash
-       and terminate the program.
+EXTRA INFORMATION
+==================
+- I decided that each player handles it's own money and not use stack, because the money logic is pretty complex for a simple stack. Although, If I would like to enhance the program, firsly I will take care for the money stack to be more complex and handle the kind of logic I used for the player.
+
+- In order for a round to be in the correct order, in the table class I added some little comments "# Helper for the round to end correctly." that show where this logic is handled.
+
+- To test that the winning logic is handled correctly, I added a simple commented test in the main function, you can enhance it to check it more carefully if needed.
+
+- I think I followed the exact rules of poker, but I didn't play it much before, so excuse me if there are some incorrectness in the rules.
 
 Thank you, and enjoy!
-
-
-

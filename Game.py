@@ -1,34 +1,107 @@
+from CardStack import CardStack
+from Deck import Deck
+from HandsChecker import HandsChecker
+from Player import Player
+from PokerRules import PokerRules
 from Table import Table
 
 
 class Game:
-    """A Game class"""
+    """
+    A Poker Game class.
+    """
 
-    def __init__(self) -> None:
-        """
-        Initialize game object.
-        """
-        self.keep_play = True
+    # Messages:
+    START_MESS = "Welcome To Poker Texas Holdem!"
+    PLAYERS_MESS = "Please enter how many players (between 2 and 10): "
+    WRONG_MESS = """Wrong value, try again: """
+    NAME_OF_PLAYER = "Enter the name of player number {0}: "
+    BALANCE = "Enter balance (greater than 0): "
+    PLAY_AGAIN = "Would you like to play again? Y = yes, N = no"
+    BYE = "See you!"
+    SAME_PLAYERS = "Stick with the same players?"
 
-    def start(self) -> None:
+    def __init__(self):
         """
-        start a poker game.
+        Constructor for a poker game.
+        """
+        self.table = None
+        self.num_of_players = None
+        self.players = []
+        self.play_again = True
+
+    def start_game(self) -> None:
+        """
+        Start the game
+        :return: None
+        """
+        while self.play_again:
+            print(Game.START_MESS)
+            self.create_players()
+            self.table = Table(self.players, self.num_of_players)
+            self.table.play_poker()
+            self.another_game()
+        print(Game.BYE)
+
+    def create_players(self) -> None:
+        """
+        Player Creator, adds it to the players list.
         :return: None.
         """
-        while self.keep_play: # While keep play is true keep playing.
-            num_of_players = input("How Many Players? ")
-            while not num_of_players.isdigit():
-                num_of_players = input("Wrong value! How Many Players? ")
-            num_of_players = int(num_of_players)
-            table = Table(num_of_players)
-            table.play_game()
-            keep_play = input("Keep playing? Y for yes, N for no")
-            while keep_play != 'Y' and keep_play != 'N':
-                keep_play = input("Keep playing? Y for yes, N for no")
-            if keep_play == 'N':
-                self.keep_play = False
+        self.get_num_of_players()
+        for i in range(self.num_of_players):
+            self.add_player(i)
+
+    def get_num_of_players(self) -> None:
+        """
+        Get from the user the number of player that will play, set the current field to this number.
+        :return: None.
+        """
+        num_of_player = input(Game.PLAYERS_MESS)
+        while not num_of_player.isdigit() or int(num_of_player) < 2 or int(num_of_player) > 10:
+            num_of_player = input(Game.WRONG_MESS)
+        self.num_of_players = int(num_of_player)
+
+    def add_player(self, num_of_player: int) -> None:
+        """
+        Add a single player.
+        :return:
+        """
+        name = input(Game.NAME_OF_PLAYER.format(num_of_player + 1))
+        balance = input(Game.BALANCE)
+        while not balance.isdigit() or int(balance) < 1:
+            balance = input(Game.WRONG_MESS)
+        self.players.append(Player(name, int(balance)))
+
+    def another_game(self) -> bool:
+        """
+        Checker if the user wants another game.
+        :return: A boolean value.
+        """
+        play_again = input(Game.PLAY_AGAIN)
+        while not play_again == "Y" and not play_again == "N":
+            play_again = input(Game.PLAY_AGAIN)
+        if play_again == "Y":
+            self.play_again = True
+            self.players = []
+        else:
+            self.play_again = False
 
 
 if __name__ == '__main__':
     game = Game()
-    game.start()
+    game.start_game()
+
+    # # test to check winning hands:
+    # adi = Player("adi", 300)
+    # guy = Player("guy", 300)
+    # card_stack = CardStack()
+    # deck = Deck()
+    #
+    # for i in range(2):
+    #     adi.cards_stack.add_card(deck.open_top())
+    #     guy.cards_stack.add_card(deck.open_top())
+    # for i in range(5):
+    #     card_stack.add_card(deck.open_top())
+    #
+    # PokerRules.winner(card_stack, 300, [adi, guy])

@@ -1,156 +1,114 @@
-from Deck import Deck
-from Player import Player
-from Rules import Rules
-
-NUM_OF_ROUNDS = 4
-CARDS_TO_BEGIN_WITH = 2
-SHOW_OPEN_CARDS = """===================
-THE OPEN CARDS ARE:
-{0}
-==================="""
-
-PLAYER_TURN = """----------------
-Player {0} it's your turn!
-Your balance: {1}$
-Your cards are: {2} | {3}
-What do you want to do? C for Call, R for Raise, F for Fold: """
-
-WINNER = """===================
-Player {0} won! He earned {1}$ from the stack!
-==================="""
+from Dealer import Dealer
+from MoneyStack import MoneyStack
+from PokerRules import PokerRules
+from CardStack import CardStack
 
 
 class Table:
-    """A table class"""
+    """
+    A table for poker.
+    """
 
-    CARDS_PER_ROUND = [0, 3, 1, 1]
-    DICT_OF_TYPE = {0: "Heart", 1: "Diamond", 2: "Clover", 3: "Spade"}
-
-    def __init__(self, num_of_players) -> None:
+    def __init__(self, players, num_of_players):
         """
-        Initialize, all fields are self-explanatory.
-        :param num_of_players: Num of players.
+        A constructor for the table.
+        :param players: a list of players.
+        :param num_of_players: the number of players.
         """
-        self.players = [Player() for i in range(num_of_players)]
-        self.num_of_player = num_of_players
+        self.players = players
+        self.num_of_players = num_of_players
         self.active_players = num_of_players
-        self.deck = Deck()
-        self.stack_money = 0
-        self.money_each_player_round = 0
-        self.keep_play = True
+        self.dealer = Dealer()
+        self.card_stack = CardStack()
+        self.money_stack = MoneyStack()
+        self.cur_player = 0
         self.round_num = 0
-        self.open_cards = []
+        self.round_player_money = 0
 
-    def play_game(self) -> None:
+    def next_active_player(self):
         """
-        Play a full game of poker
+        Move to the next active player and update the index field.
         :return: None
         """
-        self.deal_cards()
-        while self.active_players > 1 and self.round_num < NUM_OF_ROUNDS:
-            self.open_cards_to_deck(Table.CARDS_PER_ROUND[self.round_num])
-            self.show_open_cards()
+        self.cur_player = (self.cur_player + 1) % self.num_of_players
+        while not self.players[self.cur_player].is_active():
+            self.cur_player = (self.cur_player + 1) % self.num_of_players
+
+    def play_poker(self) -> None:
+        """
+        Play an entire poker game on the table.
+        :return: None.
+        """
+        self.deal_opening_cards()
+        for i in range(PokerRules.NUM_OF_ROUNDS):
+            if self.active_players == 1:
+                break
             self.play_round()
-            self.round_num += 1
-        self.prize_winner()
+        PokerRules.winner(self.card_stack, self.money_stack, self.players)
 
     def play_round(self) -> None:
         """
-        Play 1 round after opening another bunch of cards
-        :return: None
-        """
-        first_round = True
-        last_raised = 0  # Need to stop when we reach the last one that raised.
-        i = 0
-        while i != last_raised or first_round:
-            first_round = False
-            if self.players[i].is_active():  # only active player play
-                player_balance = str(self.players[i].get_balance())
-                player_first_card = self.convert_card_to_string(self.players[i].get_cards()[0])
-                player_second_card = self.convert_card_to_string(self.players[i].get_cards()[1])
-                move = input(PLAYER_TURN.format(str(i), player_balance, player_first_card, player_second_card))
-                while move != "C" and move != "R" and move != "F":
-                    move = input("Wrong input: C for Call, R for Raise, F for Fold")
-
-                if move == "C":  # if one chose "Call"
-                    self.players[i].pay_move(self.money_each_player_round)
-                    self.stack_money += self.money_each_player_round
-
-                elif move == "R":  # If one chose "Raise"
-                    raise_by = min(self.players[i].get_balance(), int(input("How much money? ")))
-                    last_raised = i
-                    self.players[i].pay_move(raise_by)
-                    self.money_each_player_round += raise_by
-                    self.stack_money += self.money_each_player_round
-
-                elif move == "F":  # If one chose "Fold"
-                    self.active_players -= 1
-                    if self.active_players == 1:
-                        break
-                    self.players[i].turn_off_active()
-
-            i = (i + 1) % self.num_of_player  # go to next player.
-        self.money_each_player_round = 0
-
-    def open_cards_to_deck(self, num_of_cards) -> None:
-        """
-        Open a given number of cards to deck.
-        :param num_of_cards: The given number of cards.
+        Play a single round of poker.
         :return: None.
         """
-        for i in range(num_of_cards):
-            self.open_cards.append(self.deck.open_card())
+        self.open_cards()
+        self.card_stack.print_cards()
+        self.money_stack.print_money()
+        start_player = self.cur_player   # Helper for the round to end correctly.
 
-    def deal_cards(self) -> None:
+        # The actual round
+        while self.continue_round(start_player):
+            if self.active_players == 1:
+                break
+            self.round_player_money += self.players[self.cur_player].play_round(self.round_player_money)
+            if not self.players[self.cur_player].is_active():
+                self.active_players -= 1
+            self.next_active_player()
+            self.players[start_player].set_already_raised(True)  # Helper for the round to end correctly.
+        self.end_round()
+
+    def end_round(self) -> None:
         """
-        Deal 2 cards to each player.
+        End the round, collect the money of all players, and set their raise field to to False.
+        :return: None.
+        """
+        self.collect_money()
+        self.round_num += 1
+        self.round_player_money = 0
+        for player in self.players:
+            player.set_already_raised(False)
+
+    def continue_round(self, start_player):
+        """
+        Check if the round needs to continue to the next player. To determine when to stop the round we need to find
+        the last one who already raised to the highest amount of money.
+        :param start_player: the player that started the round.
+        :return: if the round shell proceed.
+        """
+        if self.players[self.cur_player].get_already_raised() and \
+                self.players[self.cur_player].round_money == self.round_player_money:
+            return False
+        return True
+
+    def collect_money(self) -> None:
+        """
+        Collect the money that the players bet at the end of a round.
         :return: None.
         """
         for player in self.players:
-            for i in range(CARDS_TO_BEGIN_WITH):
-                player.take_card(self.deck.open_card())
+            self.money_stack.add_money(player.pay_round_money())
 
-    def show_open_cards(self) -> None:
+    def open_cards(self) -> None:
         """
-        Show open cards in deck to CLI
-        :return: None
+        Open cards to the stack of cards on the table.
+        :return: None.
         """
-        open_cards = ''
-        if len(self.open_cards) > 0:
-            for i in range(len(self.open_cards)):
-                open_cards += str(self.open_cards[i][0]) + " of " + Table.DICT_OF_TYPE[self.open_cards[i][1]]
-                if i != len(self.open_cards):
-                    open_cards += " | "
-        else:
-            open_cards = "There Are None"
-        print(SHOW_OPEN_CARDS.format(open_cards))
+        self.dealer.deal_cards_to(self.card_stack, PokerRules.CARDS_PER_ROUND[self.round_num])
 
-    def convert_card_to_string(self, card) -> str:
+    def deal_opening_cards(self) -> None:
         """
-        Convert card from [1:3] -> 1 of clove for example - for printing.
-        :param card: a given card.
-        :return: string.
+        Deal the players the opening cards.
+        :return: None.
         """
-        card_num = str(card[0])
-        card_type = Table.DICT_OF_TYPE[card[1]]
-        return card_num + " of " + card_type
-
-    def prize_winner(self) -> None:
-        """
-        Check for the winner among all active players, write winning message and add money to hs balance.
-        :return: None
-        """
-        if self.active_players == 1:
-            for i in range(len(self.players)):
-                if self.players[i].is_active():
-                    print(WINNER.format(str(i), str(self.stack_money)))
-                    # self.players[i].add_money(self.stack_money)
-        else:
-            last_cards = dict()
-            for i in range(len(self.players)):
-                if self.players[i].is_active():
-                    last_cards[i] = self.players[i].get_cards()
-            rules = Rules(last_cards, self.open_cards)
-            winner = rules.find_winner()
-            print(WINNER.format(str(winner), str(self.stack_money)))
-            # self.players[winner].add_money(self.stack_money)
+        for i in range(self.num_of_players):
+            self.dealer.deal_cards_to(self.players[i].cards_stack, PokerRules.CARDS_PER_PLAYER)

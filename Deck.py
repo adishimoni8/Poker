@@ -1,21 +1,26 @@
-import random
+from random import sample
+from Card import Card
 
 
 class Deck:
-    """A deck class"""
+    """
+    A deck of cards.
+    """
 
-    def __init__(self) -> None:
+    def __init__(self):
         """
-        Initialize a deck.
+        A constructor for a deck of cards.
         """
-        self.cards = [[i, j] for i in range(13) for j in range(4)]
+        self.cards = set()
+        for kind in Card.Kind:
+            for card_num in Card.CardNum:
+                self.cards.add(Card(card_num, kind))
 
-    def open_card(self) -> list:
+    def open_top(self):
         """
-        Open randomized card from deck, and erase it.
-        :return: the card chosen.
+        Open and return the top card (randomized) in a deck.
+        :return: the card opened.
         """
-        chosen = random.choice(self.cards)
-        self.cards.remove(chosen)
-        return chosen
-
+        card = sample(self.cards, 1)[0]
+        self.cards.remove(card)
+        return card
