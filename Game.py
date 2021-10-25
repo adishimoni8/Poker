@@ -1,25 +1,18 @@
+from Messages import Messages
+from Player import Player
+from Table import Table
+
+# For testing purposes
+from PokerRules import PokerRules
 from CardStack import CardStack
 from Deck import Deck
-from HandsChecker import HandsChecker
-from Player import Player
-from PokerRules import PokerRules
-from Table import Table
+from MoneyStack import MoneyStack
 
 
 class Game:
     """
     A Poker Game class.
     """
-
-    # Messages:
-    START_MESS = "Welcome To Poker Texas Holdem!"
-    PLAYERS_MESS = "Please enter how many players (between 2 and 10): "
-    WRONG_MESS = """Wrong value, try again: """
-    NAME_OF_PLAYER = "Enter the name of player number {0}: "
-    BALANCE = "Enter balance (greater than 0): "
-    PLAY_AGAIN = "Would you like to play again? Y = yes, N = no"
-    BYE = "See you!"
-    SAME_PLAYERS = "Stick with the same players?"
 
     def __init__(self):
         """
@@ -36,12 +29,12 @@ class Game:
         :return: None
         """
         while self.play_again:
-            print(Game.START_MESS)
+            print(Messages.START_MESS)
             self.create_players()
             self.table = Table(self.players, self.num_of_players)
             self.table.play_poker()
             self.another_game()
-        print(Game.BYE)
+        print(Messages.BYE)
 
     def create_players(self) -> None:
         """
@@ -57,9 +50,9 @@ class Game:
         Get from the user the number of player that will play, set the current field to this number.
         :return: None.
         """
-        num_of_player = input(Game.PLAYERS_MESS)
+        num_of_player = input(Messages.PLAYERS_MESS)
         while not num_of_player.isdigit() or int(num_of_player) < 2 or int(num_of_player) > 10:
-            num_of_player = input(Game.WRONG_MESS)
+            num_of_player = input(Messages.WRONG_MESS)
         self.num_of_players = int(num_of_player)
 
     def add_player(self, num_of_player: int) -> None:
@@ -67,20 +60,20 @@ class Game:
         Add a single player.
         :return:
         """
-        name = input(Game.NAME_OF_PLAYER.format(num_of_player + 1))
-        balance = input(Game.BALANCE)
+        name = input(Messages.NAME_OF_PLAYER.format(num_of_player + 1))
+        balance = input(Messages.BALANCE)
         while not balance.isdigit() or int(balance) < 1:
-            balance = input(Game.WRONG_MESS)
+            balance = input(Messages.WRONG_MESS)
         self.players.append(Player(name, int(balance)))
 
-    def another_game(self) -> bool:
+    def another_game(self) -> None:
         """
         Checker if the user wants another game.
         :return: A boolean value.
         """
-        play_again = input(Game.PLAY_AGAIN)
+        play_again = input(Messages.PLAY_AGAIN)
         while not play_again == "Y" and not play_again == "N":
-            play_again = input(Game.PLAY_AGAIN)
+            play_again = input(Messages.PLAY_AGAIN)
         if play_again == "Y":
             self.play_again = True
             self.players = []
@@ -96,6 +89,7 @@ if __name__ == '__main__':
     # adi = Player("adi", 300)
     # guy = Player("guy", 300)
     # card_stack = CardStack()
+    # money_stack = MoneyStack(1000)
     # deck = Deck()
     #
     # for i in range(2):
@@ -104,4 +98,4 @@ if __name__ == '__main__':
     # for i in range(5):
     #     card_stack.add_card(deck.open_top())
     #
-    # PokerRules.winner(card_stack, 300, [adi, guy])
+    # PokerRules.winner(card_stack, money_stack, [adi, guy])

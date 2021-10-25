@@ -4,14 +4,11 @@ class MoneyStack:
     Money stack.
     """
 
-    # CLI Messages:
-    MONEY_IN_STACK = "Right now the amount of money collected: {0}"
-
-    def __init__(self):
+    def __init__(self, money=0):
         """
         A constructor for a stack of money.
         """
-        self.money = 0
+        self.money = money
 
     def get_money(self) -> int:
         """
@@ -28,7 +25,7 @@ class MoneyStack:
         """
         self.money += money
 
-    def give_money(self) -> None:
+    def give_money(self) -> int:
         """
         Take money from the stack.
         :return:
@@ -37,9 +34,6 @@ class MoneyStack:
         self.money = 0
         return money
 
-    def print_money(self) -> None:
-        """
-        Print the amount of money in the stack.
-        :return: None.
-        """
-        print(MoneyStack.MONEY_IN_STACK.format(self.money))
+    def __str__(self):
+        return str(self.money) + "$"
+

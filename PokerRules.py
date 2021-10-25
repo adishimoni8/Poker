@@ -1,5 +1,6 @@
 from CardStack import CardStack
 from HandsChecker import HandsChecker
+from Messages import Messages
 from MoneyStack import MoneyStack
 
 
@@ -12,11 +13,6 @@ class PokerRules(object):
     NUM_OF_ROUNDS = 4
     CARDS_PER_ROUND = [0, 3, 1, 1]
     CARDS_PER_PLAYER = 2
-
-    # CLI Messages:
-    WINNER = """Congratulations: """
-    ONE_WINNER = "Your hand: {0}, you won {1}$!"
-    COUPLE_WINNERS = "You had the same hands: {0}, each one won {1}$!"
     HANDS = {"Royal Flush": HandsChecker.check_royal_flush,
              "Straight Flush":  HandsChecker.check_straight_flush,
              "Four of a Kind": HandsChecker.check_four_of_a_kind,
@@ -57,14 +53,14 @@ class PokerRules(object):
         :return: None.
         """
         if len(players) > 1:
-            print(PokerRules.WINNER)
+            print(Messages.WINNER)
             for player in players:
                 print(player.name)
-            print(PokerRules.COUPLE_WINNERS.format(hand, int(money_stack.get_money() / len(players))))
+            print(Messages.COUPLE_WINNERS.format(hand, int(money_stack.get_money() / len(players))))
         else:
-            print(PokerRules.WINNER)
+            print(Messages.WINNER)
             print(players[0].name)
-            print(PokerRules.ONE_WINNER.format(hand, int(money_stack.get_money())))
+            print(Messages.ONE_WINNER.format(hand, int(money_stack.get_money())))
         # Here I can add a logic to give the money, using money_stack.give_money to the winners.
 
     @staticmethod

@@ -1,4 +1,5 @@
 from Dealer import Dealer
+from Messages import Messages
 from MoneyStack import MoneyStack
 from PokerRules import PokerRules
 from CardStack import CardStack
@@ -51,9 +52,13 @@ class Table:
         Play a single round of poker.
         :return: None.
         """
+        # Print round details:
         self.open_cards()
-        self.card_stack.print_cards()
-        self.money_stack.print_money()
+        print(Messages.OPEN_CARDS)
+        print(self.card_stack)
+        print(Messages.MONEY_IN_STACK + " ", end="")
+        print(self.money_stack)
+
         start_player = self.cur_player   # Helper for the round to end correctly.
 
         # The actual round

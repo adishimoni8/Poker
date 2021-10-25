@@ -6,9 +6,6 @@ class Card:
     A single card class.
     """
 
-    # CLI Messages:
-    PRINT_CARD = "{0} of {1}"
-
     class CardNum(Enum):
         """
         Enum for card numbers.
@@ -59,11 +56,7 @@ class Card:
         """
         return self.kind
 
-    def print_card(self) -> None:
-        """
-        Method for printing a single card
-        :return: None.
-        """
-        print(Card.PRINT_CARD.format(self.num.name, self.kind.name))
+    def __str__(self):
+        return self.num.name + " of " + self.kind.name
 
 

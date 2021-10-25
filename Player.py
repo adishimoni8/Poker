@@ -73,7 +73,7 @@ Your Cards:"""
             self.do_call(money_each_player)
             return 0
         print(Player.ITS_YOUR_TURN.format(self.name, self.balance, self.round_money))
-        self.print_cards()
+        print(self.cards_stack)
         next_move = self.next_move(money_each_player)
         raised_by = 0
         if next_move == "C":
@@ -83,16 +83,6 @@ Your Cards:"""
         elif next_move == "F":
             self.do_fold()
         return raised_by
-
-    def print_cards(self) -> None:
-        """
-        Print the cards of the player.
-        :return:
-        """
-        print("****************")
-        for card in self.cards_stack.cards:
-            card.print_card()
-        print("****************")
 
     def next_move(self, money_each_player: int) -> str:
         """

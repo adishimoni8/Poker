@@ -6,9 +6,6 @@ class CardStack:
     A stack of cards.
     """
 
-    OPEN_CARDS = """================
-THE OPEN CARDS ARE: """
-
     def __init__(self):
         """
         A Constructor of a card stack.
@@ -23,20 +20,21 @@ THE OPEN CARDS ARE: """
         """
         self.cards.add(card)
 
-    def print_cards(self) -> None:
-        """
-        Print the cards in the stack.
-        :return: None.
-        """
-        print(CardStack.OPEN_CARDS)
-        if len(self.cards) == 0:
-            print("There are none")
-        for card in self.cards:
-            print(card.get_num().name + " of " + card.get_kind().name)
-
     def get_cards(self) -> set:
         """
         A getter for the stack's cards.
         :return: A set of cards.
         """
         return self.cards
+
+    def __str__(self):
+        cards = ''
+        if len(self.cards) == 0:
+            cards += "There are none"
+        else:
+            for card in self.cards:
+                cards += "|" + card.get_num().name + " of " + card.get_kind().name + "| "
+        return cards
+
+
+

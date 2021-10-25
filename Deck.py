@@ -15,6 +15,7 @@ class Deck:
         for kind in Card.Kind:
             for card_num in Card.CardNum:
                 self.cards.add(Card(card_num, kind))
+        self.size = 52
 
     def open_top(self):
         """
@@ -24,3 +25,6 @@ class Deck:
         card = sample(self.cards, 1)[0]
         self.cards.remove(card)
         return card
+
+    def get_size(self) -> int:
+        return self.size
