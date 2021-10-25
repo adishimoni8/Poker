@@ -60,7 +60,7 @@ class Player:
         :return: How much the player paid over the money each player pays this round.
         """
         # If all of the balance already been paid.
-        if self.round_money == self.balance:
+        if self.balance.get_money() == 0:
             self.do_call(money_each_player)
             return 0
         print(Messages.ITS_YOUR_TURN.format(self.name, self.balance, self.round_money))
