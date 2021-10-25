@@ -30,6 +30,7 @@ THE OPEN CARDS ARE: """
     MONEY_IN_STACK = "Right now the amount of money collected:"
 
     # PokerRules:
-    WINNER = """Congratulations: """
+    WINNER = """================
+Congratulations: """
     ONE_WINNER = "Your hand: {0}, you won {1}$!"
     COUPLE_WINNERS = "You had the same hands: {0}, each one won {1}$!"
