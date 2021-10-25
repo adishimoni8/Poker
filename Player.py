@@ -93,7 +93,7 @@ Your Cards:"""
         next_move = None
 
         # If money is raised beyond balance:
-        if self.balance - (money_each_player - self.round_money) < 0 or self.already_raised:
+        if self.balance - (money_each_player - self.round_money) <= 0 or self.already_raised:
             next_move = input(Player.CALL_OR_FOLD.format(self.name))
             while next_move != "C" and next_move != "F":
                 next_move = input(Player.WRONG_MESS)
