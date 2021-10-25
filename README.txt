@@ -19,8 +19,6 @@ README - this file.
 
 EXTRA INFORMATION
 ==================
-- I decided that each player handles it's own money and not use stack, because the money logic is pretty complex for a simple stack. Although, If I would like to enhance the program, firsly I will take care for the money stack to be more complex and handle the kind of logic I used for the player.
-
 - In order for a round to be in the correct order, in the table class I added some little comments "# Helper for the round to end correctly." that show where this logic is handled.
 
 - The game is one-rounded, but the logic makes it realy easy to be enhanced to
