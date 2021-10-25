@@ -82,20 +82,20 @@ class Game:
 
 
 if __name__ == '__main__':
-    game = Game()
-    game.start_game()
+    # game = Game()
+    # game.start_game()
 
-    # # test to check winning hands:
-    # adi = Player("adi", 300)
-    # guy = Player("guy", 300)
-    # card_stack = CardStack()
-    # money_stack = MoneyStack(1000)
-    # deck = Deck()
-    #
-    # for i in range(2):
-    #     adi.cards_stack.add_card(deck.open_top())
-    #     guy.cards_stack.add_card(deck.open_top())
-    # for i in range(5):
-    #     card_stack.add_card(deck.open_top())
-    #
-    # PokerRules.winner(card_stack, money_stack, [adi, guy])
+    # test to check winning hands:
+    adi = Player("adi", 300)
+    guy = Player("guy", 300)
+    card_stack = CardStack()
+    money_stack = MoneyStack(1000)
+    deck = Deck()
+
+    for i in range(2):
+        adi.cards_stack.add_card(deck.open_top())
+        guy.cards_stack.add_card(deck.open_top())
+    for i in range(5):
+        card_stack.add_card(deck.open_top())
+
+    PokerRules.winner(card_stack, money_stack, [adi, guy])

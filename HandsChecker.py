@@ -11,17 +11,29 @@ class HandsChecker(object):
         lst = [[0 for i in range(13)] for j in range(4)]
         for card in player.cards_stack.get_cards():
             lst[card.get_kind().value][card.get_num().value] += 1
-        lst_of_kinds = [True, True, True, True]
         for i in range(4):
             for j in range(8, 13):
                 if lst[i][j] == 0:
-                    lst_of_kinds[i] = False
                     break
-        return any(lst_of_kinds)
+            else:
+                return True
+        return False
 
     @staticmethod
     def check_straight_flush(player):
-        return HandsChecker.check_straight(player) and HandsChecker.check_flush(player)
+        lst = [[0 for i in range(13)] for j in range(4)]
+        for card in player.cards_stack.get_cards():
+            lst[card.get_kind().value][card.get_num().value] += 1
+        for i in range(len(lst)):
+            val = 0
+            for j in range(13):
+                if lst[i][j] > 0:
+                    val += 1
+                else:
+                    val = 0
+                if val == 5:
+                    return True
+        return False
 
     @staticmethod
     def check_four_of_a_kind(player):
@@ -39,7 +51,7 @@ class HandsChecker(object):
         for i in range(len(lst)):
             if lst[i] >= 2:
                 two += 1
-            if lst[i] >=3:
+            if lst[i] >= 3:
                 three += 1
         return (three >= 2) or (three == 1 and two > three)
 
