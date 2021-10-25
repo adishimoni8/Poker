@@ -91,7 +91,7 @@ class Table:
         :return: if the round shell proceed.
         """
         if self.players[self.cur_player].get_already_raised() and \
-                self.players[self.cur_player].round_money == self.round_player_money:
+                self.players[self.cur_player].get_round_money() == self.round_player_money:
             return False
         return True
 

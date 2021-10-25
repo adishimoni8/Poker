@@ -15,10 +15,10 @@ class Messages:
 
     # Player:
     ITS_YOUR_TURN = """================
-    {0}, It's your turn!
-    Your Balance: {1}$
-    Already Paid This Round: {2}$
-    Your Cards:"""
+{0}, It's your turn!
+Your Balance: {1}
+Already Paid This Round: {2}
+Your Cards:"""
     CALL_OR_FOLD = "what to do next? C = call, F = fold: "
     CALL_OR_RAISE_OR_FOLD = "what to do next? C = call, R = raise, F = fold: "
     RAISE_BY = "By how much money to raise? "

@@ -25,15 +25,20 @@ class MoneyStack:
         """
         self.money += money
 
-    def give_money(self) -> int:
+    def pay_money(self, money) -> int:
         """
         Take money from the stack.
         :return:
         """
+        self.money -= money
+        return money
+
+    def pay_all_money(self) -> int:
         money = self.money
         self.money = 0
         return money
 
     def __str__(self):
         return str(self.money) + "$"
+
 

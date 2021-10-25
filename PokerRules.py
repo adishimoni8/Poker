@@ -55,11 +55,11 @@ class PokerRules(object):
         if len(players) > 1:
             print(Messages.WINNER)
             for player in players:
-                print(player.name)
+                print(player.get_name())
             print(Messages.COUPLE_WINNERS.format(hand, int(money_stack.get_money() / len(players))))
         else:
             print(Messages.WINNER)
-            print(players[0].name)
+            print(players[0].get_name())
             print(Messages.ONE_WINNER.format(hand, int(money_stack.get_money())))
         # Here I can add a logic to give the money, using money_stack.give_money to the winners.
 

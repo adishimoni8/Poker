@@ -1,6 +1,7 @@
 from Card import Card
 from CardStack import CardStack
 from Messages import Messages
+from MoneyStack import MoneyStack
 
 
 class Player:
@@ -8,7 +9,7 @@ class Player:
     A poker player class.
     """
 
-    def __init__(self, name: str, balance: int):
+    def __init__(self, name: str, money: int):
         """
         A constructor for a player.
         :param name: The name of the player
@@ -16,10 +17,19 @@ class Player:
         """
         self.cards_stack = CardStack()
         self.name = name
-        self.balance = balance
+        self.balance = MoneyStack(money)
         self.active = True
-        self.round_money = 0
+        self.round_money = MoneyStack(0)
         self.already_raised = False
+
+    def get_name(self) -> str:
+        return self.name
+
+    def get_balance(self) -> int:
+        return self.balance.get_money()
+
+    def get_round_money(self) -> int:
+        return self.round_money.get_money()
 
     def get_already_raised(self):
         """
@@ -35,13 +45,6 @@ class Player:
         :return: None.
         """
         self.already_raised = expr
-
-    def get_round_money(self) -> int:
-        """
-        Get the money this player paid this round.
-        :return: an int value.
-        """
-        return self.round_money
 
     def is_active(self) -> bool:
         """
@@ -81,7 +84,7 @@ class Player:
         next_move = None
 
         # If money is raised beyond balance:
-        if self.balance - (money_each_player - self.round_money) <= 0 or self.already_raised:
+        if self.balance.get_money() - (money_each_player - self.round_money.get_money()) <= 0 or self.already_raised:
             next_move = input(Messages.CALL_OR_FOLD.format(self.name))
             while next_move != "C" and next_move != "F":
                 next_move = input(Messages.WRONG_MESS)
@@ -99,13 +102,12 @@ class Player:
         :param money_each_player: The amount of money each player that want to play has to pay this round.
         :return: None.
         """
-        delta = money_each_player - self.round_money  # How much more need to pay
-        if self.balance > delta:
-            self.balance -= delta
-            self.round_money += delta
+        delta = money_each_player - self.round_money.get_money()  # How much more need to pay
+        if self.balance.get_money() > delta:
+            self.balance.pay_money(delta)
+            self.round_money.add_money(delta)
         else:
-            self.round_money += self.balance
-            self.balance = 0
+            self.round_money.add_money(self.balance.pay_all_money())
 
     def do_fold(self) -> None:
         """
@@ -120,7 +122,7 @@ class Player:
         :param money_each_player: The amount of money each player that want to play has to pay this round.
         :return: How much the player raised by.
         """
-        can_raise_by = self.balance - (money_each_player - self.round_money)
+        can_raise_by = self.balance.get_money() - (money_each_player - self.round_money.get_money())
         raise_by = input(Messages.RAISE_BY)
         while not raise_by.isdigit() or int(raise_by) > can_raise_by:
             if not raise_by.isdigit():
@@ -129,17 +131,14 @@ class Player:
             else:
                 print(Messages.DONT_HAVE_THAT_MUCH)
                 raise_by = input(Messages.RAISE_BY)
-        delta = (money_each_player - self.round_money) + int(raise_by)
-        self.balance -= delta
-        self.round_money += delta
+        delta = (money_each_player - self.round_money.get_money()) + int(raise_by)
+        self.round_money.add_money(self.balance.pay_money(delta))
         self.already_raised = True
         return int(raise_by)
 
-    def pay_round_money(self):
+    def pay_round_money(self) -> int:
         """
         Pay the money the player spent this round.
         :return: The amount of money.
         """
-        round_money = self.round_money
-        self.round_money = 0
-        return round_money
+        return self.round_money.pay_all_money()
