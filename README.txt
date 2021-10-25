@@ -5,12 +5,12 @@ made by: Adi Shimoni
 FILES CONTAINED
 ==================
 Game.py - The file that runs the game.
-Table.py - A class of a table of which the game runs on.
-Player.py - A class of a player.
-Card.py - A class of a single card.
+Table.py - A table of which the game runs on.
+Player.py - A player.
+Card.py - A single card.
 CardStack.py - A stack of cards.
-Deck.py - A class of deck of cards with basic methods upon it.
-Dealer - A class of a dealer of cards.
+Deck.py - A deck of cards with basic methods upon it.
+Dealer - A dealer of cards.
 MoneyStack.py - A stack of money sits on the table.
 Rules.py - A static class contains the set of rules of poker (how many rounds, and decides the winner).
 HandChecker - A helper static class for the Rules.py, takes a single player and the open cards, and check if the player has a given hand by poker rules.
