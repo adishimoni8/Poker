@@ -32,7 +32,7 @@ class PokerRules(object):
         :param players: The list of players.
         :return: None.
         """
-        active_players = [player for player in players if player.is_active]  # Use only the active players.
+        active_players = [player for player in players if player.is_active()]  # Use only the active players.
         PokerRules.add_cards_to_players(active_players, card_stack)
         for hand, func in PokerRules.HANDS.items():
             players_with_hand = list(filter(func, active_players))
