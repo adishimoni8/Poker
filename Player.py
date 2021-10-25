@@ -1,24 +1,12 @@
 from Card import Card
 from CardStack import CardStack
+from Messages import Messages
 
 
 class Player:
     """
     A poker player class.
     """
-
-    # CLI Messages:
-
-    ITS_YOUR_TURN = """================
-{0}, It's your turn!
-Your Balance: {1}$
-Already Paid This Round: {2}$
-Your Cards:"""
-    CALL_OR_FOLD = "what to do next? C = call, F = fold: "
-    CALL_OR_RAISE_OR_FOLD = "what to do next? C = call, R = raise, F = fold: "
-    WRONG_MESS = """Wrong value, try again: """
-    RAISE_BY = "By how much money to raise? "
-    DONT_HAVE_THAT_MUCH = "You dont have that much money in your balance, try again: "
 
     def __init__(self, name: str, balance: int):
         """
@@ -72,7 +60,7 @@ Your Cards:"""
         if self.round_money == self.balance:
             self.do_call(money_each_player)
             return 0
-        print(Player.ITS_YOUR_TURN.format(self.name, self.balance, self.round_money))
+        print(Messages.ITS_YOUR_TURN.format(self.name, self.balance, self.round_money))
         print(self.cards_stack)
         next_move = self.next_move(money_each_player)
         raised_by = 0
@@ -94,15 +82,15 @@ Your Cards:"""
 
         # If money is raised beyond balance:
         if self.balance - (money_each_player - self.round_money) <= 0 or self.already_raised:
-            next_move = input(Player.CALL_OR_FOLD.format(self.name))
+            next_move = input(Messages.CALL_OR_FOLD.format(self.name))
             while next_move != "C" and next_move != "F":
-                next_move = input(Player.WRONG_MESS)
+                next_move = input(Messages.WRONG_MESS)
 
         # Free to do everything
         else:
-            next_move = input(Player.CALL_OR_RAISE_OR_FOLD.format(self.name))
+            next_move = input(Messages.CALL_OR_RAISE_OR_FOLD.format(self.name))
             while next_move != "C" and next_move != "R" and next_move != "F":
-                next_move = input(Player.WRONG_MESS)
+                next_move = input(Messages.WRONG_MESS)
         return next_move
 
     def do_call(self, money_each_player: int) -> None:
@@ -133,14 +121,14 @@ Your Cards:"""
         :return: How much the player raised by.
         """
         can_raise_by = self.balance - (money_each_player - self.round_money)
-        raise_by = input(Player.RAISE_BY)
+        raise_by = input(Messages.RAISE_BY)
         while not raise_by.isdigit() or int(raise_by) > can_raise_by:
             if not raise_by.isdigit():
-                print(Player.WRONG_MESS)
-                raise_by = input(Player.RAISE_BY)
+                print(Messages.WRONG_MESS)
+                raise_by = input(Messages.RAISE_BY)
             else:
-                print(Player.DONT_HAVE_THAT_MUCH)
-                raise_by = input(Player.RAISE_BY)
+                print(Messages.DONT_HAVE_THAT_MUCH)
+                raise_by = input(Messages.RAISE_BY)
         delta = (money_each_player - self.round_money) + int(raise_by)
         self.balance -= delta
         self.round_money += delta
